@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.github.bookerlol</groupId>
+	<artifactId>LearningLibrary</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<properties>
+		<!-- Using Java 8 -->
+		<maven.compiler.release>8</maven.compiler.release>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<developers>
+		<developer>
+			<id>bookerlol</id>
+			<name>Ethan Booker</name>
+			<email>Ethanbooker98@gmail.com</email>
+			<url>https://github.com/BookerLoL</url>
+			<roles>
+				<role>lead</role>
+				<role>developer</role>
+				<role>debugger</role>
+				<role>reviewer</role>
+				<role>support</role>
+				<role>maintainer</role>
+			</roles>
+			<timezone>America/Chicago</timezone>
+			<properties>
+				<linkedin>https://www.linkedin.com/in/bookerlol/</linkedin>
+			</properties>
+		</developer>
+	</developers>
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.7.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<version>5.7.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<name>LearningLibrary</name>
+	<description>An educational learning repository for all different kinds of topics found in CS</description>
+	<url>https://github.com/BookerLoL/LearningLibrary</url>
+	<organization>
+		<name>com.github.mautini</name>
+		<url>https://github.com/mautini</url>
+	</organization>
+	<scm>
+		<!-- Not setup properly yet -->
+		<url>https://github.com/BookerLoL/LearningLibrary</url>
+		<connection>scm:git:git://github.com/BookerLoL/LearningLibrary.git</connection>
+		<developerConnection>scm:git:git@github.com:BookerLoL/LearningLibrary.git</developerConnection>
+	</scm>
+	<distributionManagement>
+		<!-- Not setup properly yet -->
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>learninglibrary1</id>
+			<name>LearningLibrary</name>
+			<url>https://github.com/BookerLoL/LearningLibrary</url>
+		</repository>
+		<site>
+			<id>github.com</id>
+			<name>Git</name>
+			<url>https://github.com/BookerLoL/LearningLibrary</url>
+		</site>
+		<downloadUrl>https://github.com/BookerLoL/LearningLibrary</downloadUrl>
+	</distributionManagement>
+</project>
