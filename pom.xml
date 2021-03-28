@@ -7,7 +7,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
 		<!-- Using Java 8 -->
-		<maven.compiler.release>8</maven.compiler.release>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<developers>
@@ -76,4 +77,19 @@
 		</site>
 		<downloadUrl>https://github.com/BookerLoL/LearningLibrary</downloadUrl>
 	</distributionManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<excludes>
+						<exclude />
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>
