@@ -1,14 +1,11 @@
 package datastructures;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
@@ -162,14 +159,14 @@ public class ExtendibleHashTableTest {
 
 	@TestInstance(Lifecycle.PER_CLASS)
 	@TestMethodOrder(OrderAnnotation.class)
-	public class NormalCaseTester {
+	public class LargeCaseTester {
 
 		public Stream<Arguments> negativePairs() {
-			return IntStream.range(-100, 0).mapToObj(i -> Arguments.of(new SamePair(i)));
+			return IntStream.range(-1500, 0).mapToObj(i -> Arguments.of(new SamePair(i)));
 		}
 
 		public Stream<Arguments> positivePairs() {
-			return IntStream.range(1, 100).mapToObj(i -> Arguments.of(new SamePair(i)));
+			return IntStream.range(1, 1500).mapToObj(i -> Arguments.of(new SamePair(i)));
 		}
 
 		@ParameterizedTest
@@ -283,14 +280,13 @@ public class ExtendibleHashTableTest {
 		@AfterAll
 		public void cleanUp() {
 			hashtable = null;
-			System.out.println("here");
 		}
 	}
 
 	@Nested
 	@TestInstance(Lifecycle.PER_CLASS)
 	@TestMethodOrder(OrderAnnotation.class)
-	public class NormalSizeOneBucketTester extends NormalCaseTester {
+	public class NormalSizeOneBucketTester extends LargeCaseTester {
 		@BeforeAll
 		public void initAll() {
 			hashtable = new ExtendibleHashTable<>(1, obj -> obj.hashCode());
@@ -300,7 +296,7 @@ public class ExtendibleHashTableTest {
 	@Nested
 	@TestInstance(Lifecycle.PER_CLASS)
 	@TestMethodOrder(OrderAnnotation.class)
-	public class NormalSizeTwoBucketTester extends NormalCaseTester {
+	public class NormalSizeTwoBucketTester extends LargeCaseTester {
 		@BeforeAll
 		public void initAll() {
 			hashtable = new ExtendibleHashTable<>(2, obj -> obj.hashCode());
@@ -310,10 +306,11 @@ public class ExtendibleHashTableTest {
 	@Nested
 	@TestInstance(Lifecycle.PER_CLASS)
 	@TestMethodOrder(OrderAnnotation.class)
-	public class NormalSizeFourBucketTester extends NormalCaseTester {
+	public class NormalSizeFourBucketTester extends LargeCaseTester {
 		@BeforeAll
 		public void initAll() {
 			hashtable = new ExtendibleHashTable<>(4, obj -> obj.hashCode());
 		}
 	}
+
 }

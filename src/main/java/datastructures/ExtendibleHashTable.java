@@ -1,10 +1,8 @@
 package datastructures;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,11 +17,10 @@ import java.util.stream.Collectors;
  * 
  * Null values are not allowed.
  * 
- * Resources: 
- * https://www2.cs.sfu.ca/CourseCentral/354/lxwu/notes/chapter11.pdf
- * https://www.geeksforgeeks.org/extendible-hashing-dynamic-approach-to-dbms/ 
+ * Resources: https://www2.cs.sfu.ca/CourseCentral/354/lxwu/notes/chapter11.pdf
+ * https://www.geeksforgeeks.org/extendible-hashing-dynamic-approach-to-dbms/
  * 
- * 
+ * This is primarily useful for using as an index in a database.
  * 
  * @author Ethan
  * @version 1.0
@@ -35,6 +32,7 @@ import java.util.stream.Collectors;
 public class ExtendibleHashTable<K, V> implements Map<K, V> {
 	// global depth can't exceed more than 32 bits due to an int hash
 	public static final int DEFAULT_BUCKET_SIZE = 4;
+
 	private static final int MINIMUM_DEPTH = 1;
 	private static final int NOT_FOUND = -1;
 	private byte globalDepth;
@@ -103,7 +101,6 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 				return null;
 			}
 
-			// System.out.println(this);
 			V oldValue = values[index];
 			System.arraycopy(values, index + 1, values, index, nKeys - index - 1); // Cleaning up memory
 			System.arraycopy(keys, index + 1, keys, index, nKeys - index - 1);
@@ -123,7 +120,6 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 		}
 
 		public Bucket split(int hash) {
-			// Bucket is full, needs to reallocate values to ensure proper bucket.
 			localDepth++;
 			nKeys = 0;
 			Bucket otherBucket = new Bucket(localDepth);
@@ -131,23 +127,24 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 			// There are cases where both buckets will have the same leading character.
 			String input = getLeastSigBitsBinaryStr(hash, localDepth);
 			boolean isZeroLeading = input.charAt(0) == '0';
-
-			for (int i = 0; i < keys.length; i++) {
-				String binaryForm = getLeastSigBitsBinaryStr(hasher.apply(keys[i]), localDepth);
-				if (isZeroLeading) {
+			if (isZeroLeading) {
+				for (int i = 0; i < keys.length; i++) {
+					String binaryForm = getLeastSigBitsBinaryStr(hasher.apply(keys[i]), localDepth);
 					if (binaryForm.charAt(0) == '0') {
 						this.insert(keys[i], values[i]);
 					} else {
 						otherBucket.insert(keys[i], values[i]);
 					}
-				} else {
+				}
+			} else {
+				for (int i = 0; i < keys.length; i++) {
+					String binaryForm = getLeastSigBitsBinaryStr(hasher.apply(keys[i]), localDepth);
 					if (binaryForm.charAt(0) == '1') {
 						this.insert(keys[i], values[i]);
 					} else {
 						otherBucket.insert(keys[i], values[i]);
 					}
 				}
-
 			}
 
 			Arrays.fill(keys, nKeys, keys.length, null); // Cleaning up memory
@@ -156,25 +153,10 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 		}
 
 		public void borrow(Bucket other) {
-			if (other.isEmpty() || this == other) {
-				return;
-			}
-			// System.out.println("BORROWING");
-			nKeys = Math.max(nKeys, other.nKeys);
-
-			// nKeys = other.nKeys;
-			// System.out.println("Before: " + this + "\t" + other);
+			nKeys = other.nKeys;
 			System.arraycopy(other.keys, 0, keys, 0, nKeys);
 			System.arraycopy(other.values, 0, values, 0, nKeys);
-
-			other.nKeys = 0;
-			Arrays.fill(other.keys, null);
-			Arrays.fill(other.values, null);
-
-			// System.out.println("After: " + this + "\t" + other);
-
 			decrementDepth();
-			other.decrementDepth();
 		}
 
 		public String toString() {
@@ -233,13 +215,29 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 		return bucket;
 	}
 
+	/**
+	 * Returns <tt>true</tt> if this map contains a mapping for the specified key.
+	 *
+	 * @param key The key whose presence in this map is to be tested
+	 * @return <tt>true</tt> if this map contains a mapping for the specified key.
+	 */
+	@Override
 	public boolean containsKey(Object key) {
 		Objects.requireNonNull(key);
 		Bucket keyBucket = getBucket(hasher.apply(key));
 		return keyBucket.contains(key, keyBucket.keys);
 	}
 
+	/**
+	 * Returns <tt>true</tt> if the hashtable contains a mapping for the specified
+	 * value. This is a very computationally expensive operation.
+	 * 
+	 * @param The value whose presence in this hashtable to be tested.
+	 * @return <tt>true</tt> if the hashtable contains a mapping for the specified
+	 *         value.
+	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public boolean containsValue(Object value) {
 		Objects.requireNonNull(value);
 
@@ -256,6 +254,14 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 		return false;
 	}
 
+	/**
+	 * Returns the associated value that the key maps to.
+	 * 
+	 * @param The key to retrieve the associated value.
+	 * @return The value associated with the key. Returns null if there is no
+	 *         associated value.
+	 */
+	@Override
 	public V get(Object key) {
 		Objects.requireNonNull(key);
 		Bucket keyBucket = getBucket(hasher.apply(key));
@@ -263,6 +269,15 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 		return index != NOT_FOUND ? keyBucket.values[index] : null;
 	}
 
+	/**
+	 * Returns the previous associated value that was overrided by the new value
+	 * given the key.
+	 *
+	 * @param The key create or override an association.
+	 * @param The value override and store.
+	 * @return The previous value that was overrided.
+	 */
+	@Override
 	public V put(K key, V value) {
 		Objects.requireNonNull(key);
 		Objects.requireNonNull(value);
@@ -294,7 +309,6 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 				.filter(directoryBin -> getLeastSigBitsValue(directoryBin, keyBucket.localDepth) != bitsToMatch)
 				.collect(Collectors.toList());
 
-		// System.out.println(splitDirectoriesIndices);
 		for (int directoryIndex : splitDirectoriesIndices) {
 			directory[directoryIndex] = splitBucket;
 		}
@@ -331,7 +345,7 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 		int hash = hasher.apply(key);
 		Bucket keyBucket = getBucket(hash);
 
-		System.out.println("FOUND: " + keyBucket);
+		// System.out.println("FOUND: " + keyBucket);
 		V value = keyBucket.remove(key);
 
 		if (keyBucket.isEmpty() && globalDepth > MINIMUM_DEPTH) {
@@ -349,8 +363,9 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 				collapseDirectory();
 			}
 
-			if (globalDepth == MINIMUM_DEPTH) { 
-				//Weird special case that isn't handled when collapsing the directory nor borrowing
+			if (globalDepth == MINIMUM_DEPTH) {
+				// Weird special case that isn't handled when collapsing the directory nor
+				// borrowing
 				for (int i = 0; i < this.totalPotentialBuckets(); i++) {
 					Bucket b = (Bucket) directory[i];
 					b.localDepth = 1;
@@ -368,7 +383,7 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean canCollapseDirectory() {
+	private boolean canCollapseDirectory() {
 		if (globalDepth == MINIMUM_DEPTH) {
 			return false;
 		}
@@ -376,27 +391,31 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 		final int fullBuckets = totalPotentialBuckets();
 		for (int i = fullBuckets / 2; i < fullBuckets; i++) {
 			Bucket b = (Bucket) directory[i];
-			if (directory[i] == this.directory[i - (fullBuckets / 2)] || b.isEmpty()) {
-				continue;
+			if (!b.isEmpty()) {
+				return false;
 			}
-			return false;
 		}
 		return true;
 	}
 
-	public void collapseDirectory() {
+	private void collapseDirectory() {
 		globalDepth--;
 		Object[] halfDirectory = new Object[totalPotentialBuckets()];
 		System.arraycopy(directory, 0, halfDirectory, 0, totalPotentialBuckets());
 		directory = halfDirectory;
 	}
 
+	/**
+	 * Expects non null map with non null entry values.
+	 */
 	public void putAll(Map<? extends K, ? extends V> map) {
 		Objects.requireNonNull(map);
 		map.entrySet().forEach(entry -> put(entry.getKey(), entry.getValue()));
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * All contents are deleted.
+	 */
 	public void clear() {
 		size = 0;
 		globalDepth = 1;
@@ -406,7 +425,11 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 		}
 	}
 
+	/**
+	 * The unique non-null keys found in the current hash table
+	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public Set<K> keySet() {
 		Set<K> keys = new HashSet<>();
 
@@ -420,7 +443,11 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 		return keys;
 	}
 
+	/**
+	 * The associated value of each key. Output will include duplicates.
+	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public Collection<V> values() {
 		Collection<V> values = new ArrayList<>();
 
@@ -434,7 +461,11 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 		return values;
 	}
 
+	/**
+	 * The entryset similar to what you would get from a map key set.
+	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public Set<Entry<K, V>> entrySet() {
 		Set<Entry<K, V>> entries = new HashSet<>();
 
@@ -448,6 +479,14 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 		return entries;
 	}
 
+	/**
+	 * Builds the binary string representation of the given value for n bits from
+	 * left to right by masking each position for the specific bit at that position.
+	 * 
+	 * @param value value The value you want to get your bits from
+	 * @param nBits nBits the amount of bits you want. Max of 32 bits.
+	 * @return The least significant n bits as string
+	 */
 	private static String getLeastSigBitsBinaryStr(int value, int nBits) {
 		// Get the least significant n bits, ex: value = 122, nBits = 4 => ...1111010 ->
 		// 1010
@@ -461,11 +500,18 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 		return binarySB.toString();
 	}
 
+	/**
+	 * Convert the given value into X least significant bits as an int value.
+	 * 
+	 * @param value The value you want to get your bits from
+	 * @param nBits the amount of bits you want. Max of 32 bits.
+	 * @return the least significant n bits as an int
+	 */
 	private static int getLeastSigBitsValue(int value, int nBits) {
 		return Integer.parseInt(getLeastSigBitsBinaryStr(value, nBits), 2);
 	}
 
-	public void printAll() {
+	private void printAllUniqueBuckets() {
 		Set<Object> set = new HashSet<>();
 
 		for (int i = 0; i < this.directory.length; i++) {
@@ -474,37 +520,5 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 			}
 
 		}
-	}
-
-	public static void main(String[] args) {
-		// 2, 6, 10, 114, 242, 498, 1010, 2034, 4082,8178, 16370, 32754
-		Integer[] keys = { 242, 498, 1010 };
-		ExtendibleHashTable<Integer, Integer> ht = new ExtendibleHashTable<>(2, key -> key.hashCode());
-
-		for (int i = 0; i < keys.length; i++) {
-			ht.put(keys[i], -keys[i]);
-			// ;
-			// System.out.println("\n\n");
-		}
-		ht.printAll();
-		// ht.printAll();
-		for (int i = 0; i < keys.length; i++) {
-			System.out.println(ht.containsKey(keys[i]));
-		}
-
-		for (int i = 0; i < keys.length; i++) {
-			System.out.println(ht.remove(keys[i]));
-			ht.printAll();
-		}
-
-		/*
-		 * for (int i = 0; i < keys.length; i++) { ht.put(keys[i], -keys[i]); }
-		 * 
-		 * ht.printAll(); for (int i = 0; i < keys.length; i++) {
-		 * System.out.println(ht.containsKey(keys[i])); }
-		 * 
-		 * for (int i = 0; i < keys.length; i++) {
-		 * System.out.println(ht.remove(keys[i])); }
-		 */
 	}
 }
