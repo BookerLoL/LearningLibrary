@@ -345,7 +345,6 @@ public class ExtendibleHashTable<K, V> implements Map<K, V> {
 		int hash = hasher.apply(key);
 		Bucket keyBucket = getBucket(hash);
 
-		// System.out.println("FOUND: " + keyBucket);
 		V value = keyBucket.remove(key);
 
 		if (keyBucket.isEmpty() && globalDepth > MINIMUM_DEPTH) {
