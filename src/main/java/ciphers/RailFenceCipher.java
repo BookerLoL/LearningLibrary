@@ -1,0 +1,153 @@
+package ciphers;
+
+/**
+ * Implementation of the rail fence cipher.
+ * 
+ * Non-letter characters are not removed or transformed.
+ * 
+ * References:
+ * http://practicalcryptography.com/ciphers/classical-era/rail-fence/
+ * https://crypto.interactive-maths.com/rail-fence-cipher.html
+ * 
+ * @author Ethan
+ *
+ */
+public class RailFenceCipher {
+	public static final int DEFAULT_ROWS = 2;
+	private static final char DEFAULT_EMPTY = '-';
+
+	private int key;
+
+	public RailFenceCipher(int rows) {
+		if (rows < DEFAULT_ROWS) {
+			rows = DEFAULT_ROWS;
+		}
+		key = rows;
+	}
+
+	public String encode(String message) {
+		message = message.toUpperCase();
+		char[][] railField = getRailField(message);
+		return readEncoding(railField);
+	}
+
+	private char[][] getRailField(String message) {
+		char[][] railField = new char[key][message.length()];
+
+		boolean goingUp = false;
+		for (int row = 0, col = 0; col < message.length(); col++) {
+			railField[row][col] = message.charAt(col);
+
+			if (goingUp) {
+				row--;
+
+				if (row == -1) {
+					row = 1;
+					goingUp = false;
+				}
+			} else {
+				row++;
+
+				if (row == railField.length) {
+					row -= 2;
+					goingUp = true;
+				}
+			}
+		}
+
+		return railField;
+	}
+
+	private String readEncoding(char[][] railField) {
+		StringBuilder sb = new StringBuilder(railField[0].length);
+		for (char[] row : railField) {
+			for (char ch : row) {
+				if (ch != '\0' && ch != DEFAULT_EMPTY) {
+					sb.append(ch);
+				}
+			}
+		}
+		return sb.toString();
+	}
+
+	public String decode(String encoding) {
+		encoding = encoding.toUpperCase();
+		char[][] encodedRailField = getEncodedRailField(encoding);
+		return readMessage(encodedRailField);
+	}
+
+	private char[][] getEncodedRailField(String encoding) {
+		String emptyMessage = repeat("-", encoding.length());
+		char[][] railField = getRailField(emptyMessage);
+
+		for (int index = 0, rowIndex = 0, colIndex = rowIndex; index < encoding.length();) {
+			char[] row = railField[rowIndex];
+
+			colIndex = getNextEmptyCol(row, colIndex);
+
+			if (colIndex == -1) {
+				rowIndex++;
+				colIndex = 0;
+			} else {
+				row[colIndex] = encoding.charAt(index);
+				colIndex++;
+				index++;
+			}
+		}
+
+		return railField;
+	}
+
+	private int getNextEmptyCol(char[] row, int startCol) {
+		for (int col = startCol; col < row.length; col++) {
+			if (row[col] == DEFAULT_EMPTY) {
+				return col;
+			}
+		}
+		return -1;
+	}
+
+	private String repeat(String message, int count) {
+		StringBuilder sb = new StringBuilder(message.length() * count);
+		while (count > 0) {
+			sb.append(message);
+			count--;
+		}
+		return sb.toString();
+	}
+
+	private String readMessage(char[][] railField) {
+		StringBuilder sb = new StringBuilder(railField[0].length);
+
+		boolean goingUp = false;
+		for (int row = 0, col = 0; col < railField[row].length; col++) {
+			sb.append(railField[row][col]);
+
+			if (goingUp) {
+				row--;
+
+				if (row == -1) {
+					row += 2;
+					goingUp = false;
+				}
+			} else {
+				row++;
+
+				if (row == railField.length) {
+					row -= 2;
+					goingUp = true;
+				}
+			}
+		}
+
+		return sb.toString();
+	}
+
+	public static void main(String[] args) {
+		RailFenceCipher c = new RailFenceCipher(4);
+		String encoding = c.encode("defend the east wall of the castle");
+		System.out.println(encoding);
+		String message = c.decode(encoding);
+		System.out.println(message);
+	}
+}

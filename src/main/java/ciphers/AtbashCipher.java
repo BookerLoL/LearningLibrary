@@ -3,6 +3,8 @@ package ciphers;
 /**
  * Atbash Cipher implementation
  * 
+ * Non-letter characters are not removed or transformed.
+ * 
  * References:
  * https://www.youtube.com/watch?v=YJMuUIIfMzg&ab_channel=SecretScreening
  * https://en.wikipedia.org/wiki/Atbash
@@ -19,6 +21,10 @@ public class AtbashCipher {
 		return translate(encoding);
 	}
 
+	protected char shift(char c) {
+		return (char) ('Z' - (c - 'A'));
+	}
+
 	private String translate(String input) {
 		input = input.toUpperCase();
 		StringBuilder sb = new StringBuilder(input.length());
@@ -26,7 +32,7 @@ public class AtbashCipher {
 			char ch = input.charAt(i);
 
 			if (Character.isLetter(ch)) {
-				sb.append((char) ('Z' - (ch - 'A')));
+				sb.append(shift(ch));
 			} else {
 				sb.append(ch);
 			}
