@@ -110,6 +110,8 @@ public class IESDS {
 		test1();
 		test2();
 		test3();
+		test4();
+		test5();
 	}
 
 	private static void test1() {
@@ -203,6 +205,39 @@ public class IESDS {
 			System.out.println(Arrays.toString(p.getValue()));
 		});
 
+		System.out.println("Remaining Paths and Values that were not elminated");
+		List<Pair<int[], double[]>> lastStanding = IESDS.eliminate(nf);
+		for (Pair<int[], double[]> p : lastStanding) {
+			System.out.println(Arrays.toString(p.getKey()) + "\t" + Arrays.toString(p.getValue()));
+		}
+	}
+	
+	private static void test4() {
+		NormalFormGame nf = new NormalFormGame(2, 2);
+		nf.setPayout(new double[] {9, -2},  0, 0); 
+		nf.setPayout(new double[] {3, 0},  0, 1); 
+		nf.setPayout(new double[] {8, 5},  1, 0); 
+		nf.setPayout(new double[] {-1, 6},  1, 1); 
+		
+		System.out.println("Remaining Paths and Values that were not elminated");
+		List<Pair<int[], double[]>> lastStanding = IESDS.eliminate(nf);
+		for (Pair<int[], double[]> p : lastStanding) {
+			System.out.println(Arrays.toString(p.getKey()) + "\t" + Arrays.toString(p.getValue()));
+		}
+	}
+	
+	private static void test5() {
+		NormalFormGame nf = new NormalFormGame(3, 2);
+		nf.setPayout(new double[] {0, 1},  0, 0); 
+		nf.setPayout(new double[] {-4, 2},  0, 1); 
+		
+		nf.setPayout(new double[] {0, 3},  1, 0); 
+		nf.setPayout(new double[] {3, 3},  1, 1); 
+		
+		nf.setPayout(new double[] {-2, 2},  2, 0); 
+		nf.setPayout(new double[] {3, -1},  2, 1); 
+		
+		//None should be removed
 		System.out.println("Remaining Paths and Values that were not elminated");
 		List<Pair<int[], double[]>> lastStanding = IESDS.eliminate(nf);
 		for (Pair<int[], double[]> p : lastStanding) {

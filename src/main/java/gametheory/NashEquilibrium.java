@@ -8,7 +8,7 @@ import java.util.Objects;
 import datastructures.Pair;
 
 /**
- * An implementation of finding the potential nash equilibriums from a given
+ * An implementation of finding the potential pure stategy nash equilibriums from a given
  * normal form game table.
  * 
  * Resources:
