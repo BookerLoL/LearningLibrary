@@ -8,9 +8,10 @@ package ciphers;
  * Non-letter characters are not removed or transformed.
  * 
  * @author Ethan
- *
+ * @version 1.0
+ * @since 2021-04-07
  */
-public class ROT13Cipher {
+public class ROT13Cipher implements Cipherable {
 	private CaesarCipher scrambler;
 
 	public ROT13Cipher() {

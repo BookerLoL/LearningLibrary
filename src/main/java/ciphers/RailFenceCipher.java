@@ -10,9 +10,10 @@ package ciphers;
  * https://crypto.interactive-maths.com/rail-fence-cipher.html
  * 
  * @author Ethan
- *
+ * @version 1.0
+ * @since 2021-04-07
  */
-public class RailFenceCipher {
+public class RailFenceCipher implements Cipherable {
 	public static final int DEFAULT_ROWS = 2;
 	private static final char DEFAULT_EMPTY = '-';
 

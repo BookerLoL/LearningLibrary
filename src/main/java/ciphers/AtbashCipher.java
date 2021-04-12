@@ -10,9 +10,10 @@ package ciphers;
  * https://en.wikipedia.org/wiki/Atbash
  * 
  * @author Ethan
- *
+ * @version 1.0
+ * @since 2021-04-06
  */
-public class AtbashCipher {
+public class AtbashCipher implements Cipherable {
 	public String encode(String message) {
 		return translate(message);
 	}

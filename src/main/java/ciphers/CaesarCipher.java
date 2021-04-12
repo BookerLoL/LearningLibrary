@@ -6,9 +6,10 @@ package ciphers;
  * Non-letter characters are not removed or transformed.
  * 
  * @author Ethan
- *
+ * @version 1.0
+ * @since 2021-04-07
  */
-public class CaesarCipher {
+public class CaesarCipher implements Cipherable {
 	public static final int DEFAULT_SHIFTS = 1;
 	public static final int MIN_SHIFTS = 0;
 	public static final int MAX_SHIFTS = 26;
