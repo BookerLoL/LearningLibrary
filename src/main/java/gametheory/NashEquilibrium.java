@@ -8,8 +8,8 @@ import java.util.Objects;
 import datastructures.Pair;
 
 /**
- * An implementation of finding the potential pure stategy nash equilibriums from a given
- * normal form game table.
+ * An implementation of finding the potential pure stategy nash equilibriums
+ * from a given normal form game table.
  * 
  * Resources:
  * 
@@ -49,7 +49,8 @@ public class NashEquilibrium {
 		return potentialNE;
 	}
 
-	private static boolean isNashEquilibrium(Pair<int[], double[]> candidate, NormalFormGame normalForm, int[] playersTotalActions) {
+	private static boolean isNashEquilibrium(Pair<int[], double[]> candidate, NormalFormGame normalForm,
+			int[] playersTotalActions) {
 		final int[] candidatePath = candidate.getKey();
 		int[] path = candidatePath.clone();
 
@@ -62,7 +63,7 @@ public class NashEquilibrium {
 
 				path[player] = action;
 				double[] otherPayout = normalForm.getPayout(path);
-				
+
 				if (playerPayout < otherPayout[player]) {
 					return false;
 				}
@@ -109,7 +110,7 @@ public class NashEquilibrium {
 	private static void test2() {
 		// Youtube - Game theory: Math marvels: Pure strategy Nash equilibria for 3
 		// player games
-		
+
 		NormalFormGame nf = new NormalFormGame(3, 3, 2);
 
 		nf.setPayout(new double[] { 2, 0, 4 }, 0, 0, 0);
@@ -124,7 +125,6 @@ public class NashEquilibrium {
 		nf.setPayout(new double[] { 0, 0, 3 }, 2, 1, 0);
 		nf.setPayout(new double[] { 3, 1, 1 }, 2, 2, 0);
 
-		
 		nf.setPayout(new double[] { 2, 0, 3 }, 0, 0, 1);
 		nf.setPayout(new double[] { 4, 1, 2 }, 0, 1, 1);
 		nf.setPayout(new double[] { 1, 1, 2 }, 0, 2, 1);

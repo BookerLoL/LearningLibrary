@@ -16,7 +16,7 @@ public class CRCHasher {
 			hash ^= (high >> 27);
 			hash ^= input.charAt(i);
 		}
-		
+
 		return hash;
 	}
 }

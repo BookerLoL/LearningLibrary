@@ -13,11 +13,12 @@ import java.util.Objects;
  * @param <K> key type
  * @param <V> value type
  */
-public class Pair <K, V> implements Map.Entry<K, V> {
+public class Pair<K, V> implements Map.Entry<K, V> {
 	protected K key;
 	protected V value;
 
-	Pair() {}
+	Pair() {
+	}
 
 	public Pair(K key, V value) {
 		this.key = key;

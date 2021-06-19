@@ -19,8 +19,7 @@ import datastructures.counters.LoopCounter;
  * Resources:
  * 
  * YouTube - Game Theory 101: Iterated Elimination of Strictly Dominated
- * Strategies 
- * - By William Spaniel
+ * Strategies - By William Spaniel
  * 
  * Strategic dominance - Wikipedia
  * 
@@ -30,7 +29,8 @@ import datastructures.counters.LoopCounter;
  */
 public class IESDS {
 	/**
-	 * Eliminates all strategies that are strictly dominated in a given a normal form game.
+	 * Eliminates all strategies that are strictly dominated in a given a normal
+	 * form game.
 	 * 
 	 * The inputs will not be modified.
 	 * 
@@ -39,11 +39,13 @@ public class IESDS {
 	 */
 	public static List<Pair<int[], double[]>> eliminate(NormalFormGame normalForm) {
 		Objects.requireNonNull(normalForm);
-		
+
 		List<Pair<int[], double[]>> leftoverStrategies = normalForm.getActionPathAndPayouts();
 		final int[] playersTotalActions = normalForm.getAllActions();
-		// Alternatively you could just loop through all the players from 0 - (total players - 1), I wanted to give an impression on how people may actually go about it on paper
-		LoopCounter playerCounter = new LoopCounter(0, playersTotalActions.length - 1); 
+		// Alternatively you could just loop through all the players from 0 - (total
+		// players - 1), I wanted to give an impression on how people may actually go
+		// about it on paper
+		LoopCounter playerCounter = new LoopCounter(0, playersTotalActions.length - 1);
 		LinkedList<Pair<int[], double[]>> dominatedStrategies = new LinkedList<>();
 		boolean removed = true;
 
@@ -61,8 +63,9 @@ public class IESDS {
 							continue;
 						}
 
-						List<Pair<int[], double[]>> otherStrategies = getAllActionsFrom(player, otherAction, leftoverStrategies);
-						
+						List<Pair<int[], double[]>> otherStrategies = getAllActionsFrom(player, otherAction,
+								leftoverStrategies);
+
 						if (isStrictlyDominating(player, strategies, otherStrategies)) {
 							dominatedStrategies.addAll(otherStrategies);
 							break outer;
@@ -71,7 +74,7 @@ public class IESDS {
 				}
 
 				if (!dominatedStrategies.isEmpty()) {
-					playerCounter.setStartPosition(playerCounter.getCurrentPosition()); 
+					playerCounter.setStartPosition(playerCounter.getCurrentPosition());
 					break;
 				}
 
@@ -87,13 +90,15 @@ public class IESDS {
 
 		return leftoverStrategies;
 	}
-	
-	protected static List<Pair<int[], double[]>> getAllActionsFrom(int player, int strategy, List<Pair<int[], double[]>> actionsAndPayouts) {
-		return actionsAndPayouts.stream().filter(pair -> pair.getKey()[player] == strategy).collect(Collectors.toList());
+
+	protected static List<Pair<int[], double[]>> getAllActionsFrom(int player, int strategy,
+			List<Pair<int[], double[]>> actionsAndPayouts) {
+		return actionsAndPayouts.stream().filter(pair -> pair.getKey()[player] == strategy)
+				.collect(Collectors.toList());
 	}
 
-	
-	protected static boolean isStrictlyDominating(int player, List<Pair<int[], double[]>> dominator, List<Pair<int[], double[]>> subject) {
+	protected static boolean isStrictlyDominating(int player, List<Pair<int[], double[]>> dominator,
+			List<Pair<int[], double[]>> subject) {
 		if (dominator == null || subject == null || dominator.isEmpty() || dominator.size() != subject.size()) {
 			return false;
 		}
@@ -211,33 +216,33 @@ public class IESDS {
 			System.out.println(Arrays.toString(p.getKey()) + "\t" + Arrays.toString(p.getValue()));
 		}
 	}
-	
+
 	private static void test4() {
 		NormalFormGame nf = new NormalFormGame(2, 2);
-		nf.setPayout(new double[] {9, -2},  0, 0); 
-		nf.setPayout(new double[] {3, 0},  0, 1); 
-		nf.setPayout(new double[] {8, 5},  1, 0); 
-		nf.setPayout(new double[] {-1, 6},  1, 1); 
-		
+		nf.setPayout(new double[] { 9, -2 }, 0, 0);
+		nf.setPayout(new double[] { 3, 0 }, 0, 1);
+		nf.setPayout(new double[] { 8, 5 }, 1, 0);
+		nf.setPayout(new double[] { -1, 6 }, 1, 1);
+
 		System.out.println("Remaining Paths and Values that were not elminated");
 		List<Pair<int[], double[]>> lastStanding = IESDS.eliminate(nf);
 		for (Pair<int[], double[]> p : lastStanding) {
 			System.out.println(Arrays.toString(p.getKey()) + "\t" + Arrays.toString(p.getValue()));
 		}
 	}
-	
+
 	private static void test5() {
 		NormalFormGame nf = new NormalFormGame(3, 2);
-		nf.setPayout(new double[] {0, 1},  0, 0); 
-		nf.setPayout(new double[] {-4, 2},  0, 1); 
-		
-		nf.setPayout(new double[] {0, 3},  1, 0); 
-		nf.setPayout(new double[] {3, 3},  1, 1); 
-		
-		nf.setPayout(new double[] {-2, 2},  2, 0); 
-		nf.setPayout(new double[] {3, -1},  2, 1); 
-		
-		//None should be removed
+		nf.setPayout(new double[] { 0, 1 }, 0, 0);
+		nf.setPayout(new double[] { -4, 2 }, 0, 1);
+
+		nf.setPayout(new double[] { 0, 3 }, 1, 0);
+		nf.setPayout(new double[] { 3, 3 }, 1, 1);
+
+		nf.setPayout(new double[] { -2, 2 }, 2, 0);
+		nf.setPayout(new double[] { 3, -1 }, 2, 1);
+
+		// None should be removed
 		System.out.println("Remaining Paths and Values that were not elminated");
 		List<Pair<int[], double[]>> lastStanding = IESDS.eliminate(nf);
 		for (Pair<int[], double[]> p : lastStanding) {

@@ -78,7 +78,8 @@ public class LoopCounter extends BoundedCounter {
 	}
 
 	private void updateLoopCounter(int positions, int oldPos, int newPos, int additionalLoops) {
-		//System.out.println(positions + "\t" + oldPos + "\t" + newPos + "\t" + additionalLoops);
+		// System.out.println(positions + "\t" + oldPos + "\t" + newPos + "\t" +
+		// additionalLoops);
 		if (positions < 0) {
 			if (newPos <= getStartPosition()) {
 				loopCounter -= 1;
@@ -103,7 +104,7 @@ public class LoopCounter extends BoundedCounter {
 	public String toString() {
 		return super.toString() + ", Loop Count: " + getLoopCount();
 	}
-	
+
 	public static void main(String[] args) {
 		LoopCounter lc = new LoopCounter(0, 1);
 		lc.increment();

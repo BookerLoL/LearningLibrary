@@ -11,7 +11,7 @@ public class BKDRHasher {
 		return hash32(input, 131);
 	}
 
-	//seed: 31, 131, 1313, 13131, etc...
+	// seed: 31, 131, 1313, 13131, etc...
 	public static int hash32(String input, int seed) {
 		if (!isValidSeed(seed)) {
 			throw new IllegalArgumentException("Number must be an alternating pattern of '1' and '3'");

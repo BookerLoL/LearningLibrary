@@ -33,7 +33,7 @@ public class BloomFilter<T> {
 		if (hashFunctions.length == 0) {
 			throw new IllegalArgumentException("Must provide hash functions");
 		}
-		
+
 		bits = new BitSet(capacity);
 	}
 

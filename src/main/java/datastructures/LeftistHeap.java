@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * An iterative implementation of a leftist heap. 
+ * An iterative implementation of a leftist heap.
  * 
  * References:
  * https://userpages.umbc.edu/~chang/cs341.s17/park/L15-Leftist-Heaps-JP.pdf

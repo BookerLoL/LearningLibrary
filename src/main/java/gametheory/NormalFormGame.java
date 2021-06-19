@@ -219,29 +219,32 @@ public class NormalFormGame {
 	}
 
 	/**
-	 * Retrieve a specific payout based on the action path to get there. 
-	 * Please be warned that this is the in-memory payout. 
-	 * So any changes to the results will affect the payout internally.
+	 * Retrieve a specific payout based on the action path to get there. Please be
+	 * warned that this is the in-memory payout. So any changes to the results will
+	 * affect the payout internally.
 	 * 
 	 * 
 	 * @param actionPath The path to take to get to the payout.
-	 * @return If the game has players then returns the in-memory payout, otherwise returns an empty array.
+	 * @return If the game has players then returns the in-memory payout, otherwise
+	 *         returns an empty array.
 	 */
 	public double[] getPayout(int... actionPath) {
 		return getPayout(true, actionPath);
 	}
-	
+
 	/**
-	 * Retrieve a specific payout based on the action path to get there. 
-	 * You are able to specify whether you want the in-memory payout 
-	 * where you can make modifications directly or get a copy of the payout.
+	 * Retrieve a specific payout based on the action path to get there. You are
+	 * able to specify whether you want the in-memory payout where you can make
+	 * modifications directly or get a copy of the payout.
 	 * 
 	 * 
-	 * @param inMemory Whether or not you want the actual in memory payout or a copy of it.
+	 * @param inMemory   Whether or not you want the actual in memory payout or a
+	 *                   copy of it.
 	 * @param actionPath The path to take to get to the payout.
-	 * @return If the game has players then returns the payout, otherwise returns an empty array.
+	 * @return If the game has players then returns the payout, otherwise returns an
+	 *         empty array.
 	 */
-	public double[] getPayout(boolean inMemory, int ...actionPath) {
+	public double[] getPayout(boolean inMemory, int... actionPath) {
 		checkValidActionPath(actionPath);
 
 		if (isEmptyLobby()) {
@@ -249,7 +252,7 @@ public class NormalFormGame {
 		}
 
 		double[] payouts = getNode(actionPath).payouts;
-		return inMemory ?  payouts : payouts.clone();
+		return inMemory ? payouts : payouts.clone();
 	}
 
 	private void checkValidActionPath(int... actionPath) {
@@ -264,7 +267,8 @@ public class NormalFormGame {
 	 * argument payout will be cloned. Need a value action path to replace the
 	 * payout.
 	 * 
-	 * @param payout The new payout that should be the same size as the old payout.
+	 * @param payout     The new payout that should be the same size as the old
+	 *                   payout.
 	 * @param actionPath The path to reach the payout.
 	 */
 	public void setPayout(double[] payout, int... actionPath) {
@@ -278,8 +282,8 @@ public class NormalFormGame {
 
 		getNode(actionPath).payouts = payout.clone();
 	}
-	
-	private PlayerNode getNode(int ... actionPath) {
+
+	private PlayerNode getNode(int... actionPath) {
 		PlayerNode tempPlayer = rootPlayer;
 		for (int actionIndex = 0; actionIndex < actionPath.length; actionIndex++) {
 			int action = actionPath[actionIndex];
@@ -330,8 +334,8 @@ public class NormalFormGame {
 
 	/**
 	 * Retrieve both a string format of the possible action paths and their
-	 * associated payout vector from left to right. 
-	 * Will retrieve the in-memory copy of the payouts, so careful on modifications.
+	 * associated payout vector from left to right. Will retrieve the in-memory copy
+	 * of the payouts, so careful on modifications.
 	 * 
 	 * This is useful to use for applying IESDS or other related algorithms. Each
 	 * action path is similar to accessing a matrix position.
@@ -342,12 +346,13 @@ public class NormalFormGame {
 	public List<Pair<int[], double[]>> getActionPathAndPayouts() {
 		return getActionPathAndPayouts(true);
 	}
-	
+
 	/**
-	 * Retrieve both action paths and their associated payout from left to right. 
+	 * Retrieve both action paths and their associated payout from left to right.
 	 * Able to retrieve the in-memory payout otherwise receive a copy of it.
 	 * 
-	 * @param inMemory Whether or not you want the actual in-memory payout or a copy of it.
+	 * @param inMemory Whether or not you want the actual in-memory payout or a copy
+	 *                 of it.
 	 * @return If non-empty, retrieves the list of all possible actions and their
 	 *         associated payout otherwise an empty list.
 	 */
@@ -378,7 +383,7 @@ public class NormalFormGame {
 			getAllActionPathsAndPayoutsHelper(player.actions.get(i), actionPath, playerIndex + 1, info);
 		}
 	}
-	
+
 	private void getAllActionPathsAndPayoutsCopyHelper(PlayerNode player, int[] actionPath, int playerIndex,
 			List<Pair<int[], double[]>> info) {
 		if (player.isLeaf()) {

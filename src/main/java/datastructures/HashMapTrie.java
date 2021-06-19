@@ -96,7 +96,7 @@ public class HashMapTrie {
 			return false;
 		}
 
-		 // clean up memory while going back to the root.
+		// clean up memory while going back to the root.
 		if (next.edges.isEmpty()) {
 			current.edges.remove(input.charAt(index));
 		}

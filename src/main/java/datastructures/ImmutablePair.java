@@ -1,9 +1,8 @@
 package datastructures;
 
-
 /**
- * An immutable pair class that does not allow values to be 
- * changed after being set.
+ * An immutable pair class that does not allow values to be changed after being
+ * set.
  * 
  * @author Ethan
  * @version 1.0
