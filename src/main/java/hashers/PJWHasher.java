@@ -8,8 +8,17 @@ package hashers;
  * @author Ethan
  *
  */
-public class PJWHasher {
+public class PJWHasher extends Hasher implements Hasher32 {
+	/**
+	 * Uses the PJW hash to create 32 bit hash value.
+	 * 
+	 * @param input A non-null input to hash
+	 * @return A 32 bit hash
+	 * @throws IllegalArgumentException input is null
+	 */
 	public static int hash32(String input) {
+		checkValidInput(input);
+
 		int hash = 0;
 		int high = 0;
 		for (int i = 0; i < input.length(); i++) {

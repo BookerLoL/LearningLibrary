@@ -1,12 +1,20 @@
 package hashers;
 
 /**
- * Rober Sedgewicks Hash Function
+ * Robert Sedgewicks Hash Function
  * 
  * @author Ethan
  *
  */
-public class RSHasher {
+public class RSHasher extends Hasher implements Hasher64 {
+
+	/**
+	 * Uses the Robert Sedgewicks hash to create 64 bit hash value.
+	 * 
+	 * @param input A non-null input to hash
+	 * @return A 64 bit hash
+	 * @throws IllegalArgumentException input is null
+	 */
 	public static long hash64(String input) {
 		long b = 378551;
 		long a = 63689;
